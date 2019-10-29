@@ -896,9 +896,10 @@ def cleanup():
     if conn:
         unlock_tables()
         drop_custom_triggers()
-        if not options.ghost:
-            drop_table(ghost_table_name)
-        drop_table(archive_table_name)
+        rename_tables()
+        #if not options.ghost:
+        #    drop_table(ghost_table_name)
+        #drop_table(archive_table_name)
 
 
 def exit_with_error(error_message):
@@ -946,10 +947,10 @@ try:
             act_query(query)
             verbose("Binary logging for session disabled")
 
-        ghost_table_name = None
-        if options.ghost:
-            if table_exists(options.ghost):
-                exit_with_error("Ghost table: %s.%s already exists." % (database_name, options.ghost))
+        #ghost_table_name = None
+        #if options.ghost:
+        #    if table_exists(options.ghost):
+        #        exit_with_error("Ghost table: %s.%s already exists." % (database_name, options.ghost))
 
         if options.ghost:
             ghost_table_name = options.ghost
@@ -998,13 +999,14 @@ try:
             shared_columns = get_shared_columns()
 
             create_custom_triggers()
-            lock_tables_write()
-            unique_key_min_values, unique_key_max_values, range_exists = get_unique_key_range()
-            unlock_tables()
+            #lock_tables_write()
+            #drop_custom_triggers()
+            #unique_key_min_values, unique_key_max_values, range_exists = get_unique_key_range()
+            #unlock_tables()
 
-            copy_data_pass()
-            if not options.skip_delete_pass:
-                delete_data_pass()
+            #copy_data_pass()
+            #if not options.skip_delete_pass:
+            #    delete_data_pass()
 
             if options.ghost:
                 verbose("Ghost table creation completed. Note that triggers on %s.%s were not removed" % (database_name, original_table_name))
